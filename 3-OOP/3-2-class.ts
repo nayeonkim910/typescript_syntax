@@ -9,10 +9,10 @@
         //클래스에서 딱 한번 정의하는 값 ,obj만들때마다 중복생성되니까 메모리 낭비.
         //static붙이면 instance에서는 생성되지않음.
         //클래스 자체의 변수가 되니까 (this.변수)❌ (클래스명.변수)⭕
-        coffeeBeans: number; //instance level
-        
+       private coffeeBeans: number; //instance level
         constructor(beans:number){
             this.coffeeBeans = beans;
+
         }
         static makeMachine(beans:number):CoffeeMaker{
             return new CoffeeMaker(beans);
@@ -32,9 +32,9 @@
     }
     const coffeMachine = new CoffeeMaker(22);
     console.log(coffeMachine);
-    console.log(coffeMachine.makeCoffee(2));      
-    const cm = CoffeeMaker.makeMachine(7);
-    console.log(cm);
-    console.log(cm.makeCoffee(1));
+    // console.log(coffeMachine.makeCoffee(2));      
+    // const cm = CoffeeMaker.makeMachine(7);
+    // console.log(cm);
+    // console.log(cm.makeCoffee(1));
     
 }
