@@ -17,16 +17,33 @@
     state: 'fail';
     reason: string;
   };
+  const loading:LoadingState={
+    state:'loading',
+  };
+  const success:SuccessState={
+    state: 'success',
+    response:{
+      body: 'loaded',
+    }
+  }
+  const fail:FailState={
+    state:'fail',
+    reason: 'no network',
+  }
 
   type ResourceLoadState = LoadingState | SuccessState | FailState;
-
-  function printLoginState(LoadState:ResourceLoadState){
-    LoadState.state=='loading'&& console.log('👀 loading...');
-    LoadState.state=='success'&& console.log('😃',LoadState.response.body);
-    LoadState.state=='fail'&& console.log('😱',LoadState.reason);
-    
+  function printLoginState(state: ResourceLoadState):void{
+    if(state===loading){
+      console.log(`👀 ${state.state}...`);
+    }
+    else if(state===success){
+      console.log(`😃 ${state.response.body}`);
+    }
+    else if(state===fail){
+      console.log(`🥶 ${state.reason}`);
+    }
   }
-   printLoginState({ state: 'loading' }); // 👀 loading...
-   printLoginState({ state: 'success', response: { body: 'loaded' } }); // 😃 loaded
-   printLoginState({ state: 'fail', reason: 'no network' }); // 😱 no network
+  printLoginState(loading);
+  printLoginState(success);
+  printLoginState(fail);
 }
