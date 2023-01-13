@@ -5,27 +5,37 @@
 
 
 type Num = number;
-console.log(calculate(add, 1, 3)); // 4
-console.log(calculate(substract, 3, 1)); // 2
-console.log(calculate(multiply, 4, 2)); // 8
-console.log(calculate(divide, 4, 2)); // 2
-console.log(calculate(remainder, 5, 2)); // 1
+console.log(calculate('add', 1, 3)); // 4
+console.log(calculate('substract', 3, 1)); // 2
+console.log(calculate('multiply', 4, 2)); // 8
+console.log(calculate('divide', 4, 2)); // 2
+console.log(calculate('remainder', 5, 2)); // 1
 
-function calculate(action:Function ,a:number, b:number){
-    let result = action(a,b);
-    console.log(result);
+//기능을 union으로 정리;
+
+type Func = 'add'|'substract'|'multiply'|'divide'|'remainder';
+type Calculator = {
+    (func:Func,num1:number,num2:number):number;
+}
+function calculate(func:Func,num1:number,num2:number): number|undefined {
+            switch (func) {
+            case 'add':
+                return(num1+num2);
+            case 'substract':
+                return(num1-num2);
+            case 'multiply':
+                return(num1*num2);
+            case 'divide':
+                return(num1/num2);
+            case 'remainder':
+                return(num1%num2);
+                
+                default:
+                throw Error('unknown Function !');
+            }  
 }
 
-function add(a:Num,b:Num){
-    return a+b;
-};
-function substract (a:Num,b:Num){
-    return a-b;};
-function multiply  (a:Num,b:Num){
-    return a*b;};
-function divide    (a:Num,b:Num){
-    return a/b;};
-function remainder (a:Num,b:Num){
-    return a%b;};
+
+
 
 }
