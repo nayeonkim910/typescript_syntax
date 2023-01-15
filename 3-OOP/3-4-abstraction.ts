@@ -61,7 +61,11 @@
         }
      
     }
-    const deepCoffeefmaker =CoffeeMachine.makeCoffeeMuchine(50);
+    const deepCoffeefmaker:CoffeeMachine =CoffeeMachine.makeCoffeeMuchine(50);
+    deepCoffeefmaker.fillCoffeeBeans(20);
+    const maker:CoffeeMaker = CoffeeMachine.makeCoffeeMuchine(40);
+    maker.makeCoffee(3);
+    // const maker2:CoffeeMaker = new CoffeeMachine(33);
     const espresso =deepCoffeefmaker.makeCoffee(2);
     console.log(espresso);
 

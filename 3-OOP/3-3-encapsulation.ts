@@ -21,7 +21,6 @@
 
        static makeCoffeeMuchine(beans:number){
             return new CoffeeMaker(beans);
-
        }    
 
        decideBeansGramm(gram:number){
