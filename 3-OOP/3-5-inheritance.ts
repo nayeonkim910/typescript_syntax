@@ -15,17 +15,32 @@
         makeCoffee(shots: number): CoffeeCup;
     }
     //Syrup interface
+    interface SyrupPump {
+        addSyrup(coffee:CoffeeCup):CoffeeCup;
+    }
     //Milk interface
-    class milkSteamer{
-        private steamMilk(){
-            console.log('-------------steaming......🥛');
+    interface MilkFrother {
+        steamMilk(coffee:CoffeeCup):CoffeeCup;
+    }
+//--------------------------------
+    class milkSteamer implements MilkFrother{
+        private steam(){
+            console.log('-------------steaming milk......🥛');
         }
-        addMilk(coffee:CoffeeCup):CoffeeCup{
-            this.steamMilk();
+        steamMilk(coffee:CoffeeCup):CoffeeCup{
+            this.steam();
             return {...coffee,hasMilk:true};
         }
     }
-    class syrupPump{
+
+    class noMilk implements MilkFrother{
+        steamMilk(coffee:CoffeeCup):CoffeeCup{
+            return {...coffee,hasMilk:false};
+        }
+    }
+//--------------------------------
+
+    class syrupAdder implements SyrupPump{
         private pumpSyrup(){
             console.log('--------------pump Syrup...🍶');
         }
@@ -34,7 +49,12 @@
             return {...coffee,syrup:true};
         }
     }
-    class PremiumsyrupPump{
+    class noSyrup implements SyrupPump{
+        addSyrup(coffee:CoffeeCup){
+            return {...coffee,syrup:false};
+        }
+    }
+    class PremiumsyrupPump implements SyrupPump{
         private pumpSyrup(){
             console.log('pump  Premium Syrup...🍶💚❤💘😉');
         }
@@ -43,21 +63,16 @@
             return {...coffee,syrup:true};
         }
     }
+//--------------------------------
     class CoffeeMachine implements CoffeeMaker {
         //static은 상수목적이라 변경할 일 없음 
         private static BEANS_GRAMM: number = 7  
-        private coffeeBeans!: number;
-        constructor(beans: number){ 
-            this.coffeeBeans = beans;
-        }
-            static makeCoffeeMachine(beans: number): CoffeeMachine {
-                return new CoffeeMachine(beans);
+        // private coffeeBeans!: number;
+            constructor(
+                private coffeeBeans: number,
+                private syrupDivice:SyrupPump,
+                private milkDevice:MilkFrother){ 
             }
-
-            clean() {
-                console.log(`wasing---machine---🚿 `);
-            }
-            
             fillCoffeeBeans(beans: number) {
                 if (beans <= 0) {
                     throw new Error('value for beans should be greater than 0');
@@ -74,7 +89,6 @@
             private heating() {
                 console.log(`heating now...♨️`);
             }
-
             private extract(shots: number): CoffeeCup {
                 console.log(`extract one shot 🔴`);
                 return {
@@ -87,61 +101,33 @@
                 this.grind(shots);
                 this.heating();
                 const coffee = this.extract(shots);
-                return coffee;
+                const hasSyrup=this.syrupDivice.addSyrup(coffee);
+                return this.milkDevice.steamMilk(hasSyrup);
             }
     }
 
-    class LatteMachine extends CoffeeMachine{
-        constructor(
-            private beans:number,
-            private milk:milkSteamer){
-            super(beans);
-        }
-        private steamMilk(){
-            console.log('steaming milk...🥛');
-        }
-        makeCoffee(shots: number):CoffeeCup {
-            const coffee = super.makeCoffee(shots);
-            return  this.milk.addMilk(coffee);
-        }
-    }
-    
-    class sweetCoffeeMachine extends CoffeeMachine{
-        constructor(
-            private beans:number,
-            private syrup:syrupPump){
-            super(beans)
-        }
-        makeCoffee(shots: number): CoffeeCup{
-            const coffee= super.makeCoffee(shots);
-            return this.syrup.addSyrup(coffee);
-            
-        }
-    }
+    //milk 종류
     const milk = new milkSteamer();
-    const syrup = new syrupPump();
-    //-------
-    const sgCoffeeMC = new sweetCoffeeMachine(33,syrup);
-    const sgcoffee=sgCoffeeMC.makeCoffee(2);
-    console.log(sgcoffee);
+    const notM = new noMilk();
     
-    //-------
-    
-    const latteMC = new LatteMachine(22,milk);
-    const latte = latteMC.makeCoffee(2);
-    console.log(latte);
+    //syrup 종류
+    const syrup = new syrupAdder();
+    const PremiumSyrup = new PremiumsyrupPump();
+    const notS = new noSyrup();
+    //CoffeeMachine클래스 하나를 가지고 다양한 기기를 ☑️ 조립하기
+    //extends 상속을 전혀 사용하지않았지만,원하는 형태의 오브젝트를 만들어냄.
+    //미리 interface로 약속해두고, 조건에 맞는 블럭으로 조립
+    const SWCFMaker= new CoffeeMachine(33,syrup,notM);
+    const SWLatteMaker = new CoffeeMachine(33,PremiumSyrup,milk);
+    const LatteMaker = new CoffeeMachine(33,notS,milk);
 
-    // const MachineSet:CoffeeMaker[] =[
-        // new CoffeeMachine(15),
-        // new LatteMachine(15),
-        // new sweetCoffeeMachine(15),
-    // ]
-    // console.clear();
-    // MachineSet.forEach((MC)=>{
-        // console.log('------------');
-        // console.log(MC.makeCoffee(2));
-    // });
-        
+    const machineSet:CoffeeMachine[]= [
+        SWCFMaker,
+        SWLatteMaker,
+        LatteMaker
+    ];
+
+    machineSet.forEach((MC)=>MC.makeCoffee(2));
 }
    
    
