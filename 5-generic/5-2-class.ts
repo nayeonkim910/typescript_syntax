@@ -1,28 +1,23 @@
     
 {   
-
-    interface Either<L, R>{
-        left  : ()=> L;
-        right : ()=> R;
+    interface Either<T> {
+        left: ()=> T;
+        right: ()=> T;
+    }
+    //제네릭 사용하기 😀
+    class chooseEither<T> implements Either<T>{
+        constructor(
+            private valueL:T,
+            private valueR:T){
+        }
+        left= () => this.valueL;
+        right= () => this.valueR;
     }
 
-    class SimpleEither<L, R> implements Either<L,R> {
-        constructor(private leftValue: L, private rightValue:R){
-        }
-
-        left():L{
-            return this.leftValue;
-        }
-        
-        right():R{
-            return this.rightValue;
-        }
-    }
-    const either = new SimpleEither(7,8);
-    console.log(either.left());
-    console.log(either.right());
-    const custom  = new SimpleEither({name:'nayeon'}, 'hello');
-    console.log(custom.left());
-    console.log(custom.right());
-
+    const CE= new chooseEither(true,false);
+    const leftValue = CE.left();
+    const rightValue = CE.right();
+    console.log(leftValue);
+    console.log(rightValue);
+    
 }
