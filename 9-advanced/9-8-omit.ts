@@ -5,7 +5,7 @@
     url: string;
     data: string;
   };
-
+  
   type VideoMetadata = Omit<Video, 'url' | 'data'>;
 
   function getVideo(id: string): Video {

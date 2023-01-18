@@ -1,46 +1,50 @@
 {
-    interface Employee {
-        pay():void;
-    }
-    
+    interface Employee{
+       pay():void;
+    }   
     class FullTimeEmployee implements Employee{
         pay(): void {
-            console.log(`full time!!`);
+            console.log('get fullTime payment');
         }
-        workFullTime(){
-    
+        work(){
+            console.log('work FullTime');
+            
         }
     }
     class PartTimeEmployee implements Employee{
         pay(): void {
-            console.log(`full part time!!`);
+            console.log('get partTime payment');
         }
-        workPartTime(){
+        work(){
+            console.log('work PartTime');
             
-        }    
-    }
-    //    bad Example 💩
-    // function pay(employee:Employee): Employee{
-        // employee.pay();
-        // return employee;
-    // }
-    function pay<T extends Employee>(emp:T):T{
-        emp.pay();
-        return emp;
+        }
     }
 
-    const nayeon = new FullTimeEmployee();
-    nayeon.workFullTime();
-    const nap = pay(nayeon);
-
-    function getValue<T, K extends keyof T>(obj:T, key:K):T[K]{
+    function givePayment<T extends Employee>(em:T):T{
+        em.pay();
+        return em;
+    }
+    const fullEm = new FullTimeEmployee();
+    const partEm = new PartTimeEmployee();
+    
+    const nayeon= givePayment(fullEm);
+    const tom= givePayment(partEm);
+    //----------제네릭 사용하기
+    const thomas = {
+        name:'thomas',
+        age:22,
+        job:'engineer',
+    }
+    const dog = {
+        name:'luke',
+        age:6,
+    }
+    function getValue<T,K extends keyof T >(obj:T,key:K):T[K]{
+        console.log(obj[key]);
         return obj[key];
     }
-    const obj = {
-        name: 'nayeon',
-        age : 20,
-    };
-
-    console.log(getValue(obj,'name'));// nayeon
-    console.log(getValue(obj,'age'));// nayeon
+    getValue(thomas,'job');
+    getValue(dog,'name');
+    getValue(thomas,'age');
 }
